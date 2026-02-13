@@ -562,6 +562,35 @@ html.no-gif .hero > .container { position: relative; z-index: 2 }
 
   /* Make decorative fx layers less dense on small screens for performance */
   .fx { display: none; }
+
+  /* Portrait image: avoid cropping and overflow on narrow viewports
+     Allow the portrait container to grow with image height and ensure
+     the image maintains aspect ratio (no overflow) */
+  .portrait {
+    aspect-ratio: auto;
+    max-height: none;
+  }
+
+  .portraitInner {
+    width: 100%;
+    height: auto;
+    padding: 10px;
+    box-sizing: border-box;
+  }
+
+  .portraitImg.responsive-img {
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+    object-fit: contain;
+    display: block;
+  }
+
+  /* Allow hero to expand vertically on small screens so images aren't clipped */
+  .hero {
+    max-height: none;
+    overflow: visible;
+  }
 }
 
 /* Desktop wide tweaks */
