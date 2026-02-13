@@ -314,7 +314,7 @@ function FlipBookGallery({ images: propImages }) {
               key={img.src}
               src={img.src}
               alt={img.alt}
-              className={cls}
+              className={`${cls} responsive-img`}
               onClick={() => goTo(i)}
               style={{ '--r': `${-8 + (i % 5) * 6}deg` }}
             />
@@ -341,6 +341,7 @@ function App() {
   const [slides, setSlides] = useState(() => buildPlaceholderSlides())
   const [index, setIndex] = useState(0)
   const [autoplay, setAutoplay] = useState(true)
+  const [menuOpen, setMenuOpen] = useState(false)
   // Intro modal visibility (start visible)
   const [introVisible, setIntroVisible] = useState(true)
 
@@ -407,23 +408,44 @@ function App() {
               </div>
               <div>For Mom</div>
             </div>
+            {/* Mobile menu toggle */}
+            <button
+              className={`menuToggle ${menuOpen ? 'open' : ''}`}
+              aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={menuOpen}
+              onClick={() => setMenuOpen((v) => !v)}
+            >
+              <svg width="22" height="16" viewBox="0 0 22 16" fill="none" aria-hidden>
+                <path d="M0 2h22M0 8h22M0 14h22" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+              </svg>
+            </button>
 
-            <nav className="nav" aria-label="Sections">
-              <button className="pill" onClick={() => scrollToId('hero')}>
-                <HeartIcon className="pillIcon" /> Home
-              </button>
-              <button className="pill" onClick={() => scrollToId('gallery')}>
-                <SparkleIcon className="pillIcon" /> Photos
-              </button>
-              <button className="pill" onClick={() => scrollToId('message')}>
-                <SparkleIcon className="pillIcon" /> Message
-              </button>
-              <button className="pill" onClick={() => scrollToId('memories')}>
-                <HeartIcon className="pillIcon" /> Memories
-              </button>
-              <button className="pill" onClick={() => scrollToId('final')}>
-                <HeartIcon className="pillIcon" /> Love
-              </button>
+            <nav className={`nav ${menuOpen ? 'open' : ''}`} aria-label="Sections">
+              {(() => {
+                const navClick = (id) => {
+                  scrollToId(id)
+                  setMenuOpen(false)
+                }
+                return (
+                  <>
+                    <button className="pill" onClick={() => navClick('hero')}>
+                      <HeartIcon className="pillIcon" /> Home
+                    </button>
+                    <button className="pill" onClick={() => navClick('gallery')}>
+                      <SparkleIcon className="pillIcon" /> Photos
+                    </button>
+                    <button className="pill" onClick={() => navClick('message')}>
+                      <SparkleIcon className="pillIcon" /> Message
+                    </button>
+                    <button className="pill" onClick={() => navClick('memories')}>
+                      <HeartIcon className="pillIcon" /> Memories
+                    </button>
+                    <button className="pill" onClick={() => navClick('final')}>
+                      <HeartIcon className="pillIcon" /> Love
+                    </button>
+                  </>
+                )
+              })()}
             </nav>
           </div>
         </div>
@@ -465,7 +487,7 @@ function App() {
                       <img
                         src="/picture5.png"
                         alt="Your mom’s portrait"
-                        className="portraitImg"
+                        className="portraitImg responsive-img"
                       />
                     </div>
                   </div>

@@ -142,3 +142,9 @@
   .flower { --fl-width: 18vmin }
   .flower_line { height: 58vmin }
 }
+
+/* Ensure decorative flowers don't overpower small screens */
+@media (max-width: 480px) {
+  .flower { --fl-width: 14vmin; bottom: 6vmin; }
+  .flower_line { height: 46vmin }
+}

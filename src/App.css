@@ -35,6 +35,7 @@
   z-index: 1;
   width: min(1080px, calc(100% - 40px));
   margin: 0 auto;
+  padding: 0 20px;
 }
 
 .topbar {
@@ -42,8 +43,9 @@
   top: 0;
   z-index: 5;
   backdrop-filter: blur(12px);
-  background: linear-gradient(180deg, rgba(255, 247, 251, 0.82), rgba(255, 247, 251, 0.46));
-  border-bottom: 1px solid rgba(169, 63, 104, 0.14);
+  background: linear-gradient(180deg, rgba(255, 247, 251, 0.92), rgba(255, 247, 251, 0.78));
+  border-bottom: 1px solid rgba(169, 63, 104, 0.10);
+  padding: 6px 0;
 }
 
 /* When the intro is active, hide/disable main UI so the modal feels like the only thing */
@@ -69,7 +71,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 14px;
-  padding: 14px 0;
+  padding: 12px 0;
 }
 
 .brand {
@@ -78,6 +80,7 @@
   gap: 10px;
   font-weight: 800;
   letter-spacing: 0.2px;
+  font-size: 18px;
 }
 
 .brandMark {
@@ -96,16 +99,17 @@
 .nav {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   flex-wrap: wrap;
   justify-content: flex-end;
+  transition: transform 220ms ease, opacity 220ms ease;
 }
 
 .pill {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 12px;
+  padding: 10px 14px;
   border-radius: 999px;
   border: 1px solid rgba(169, 63, 104, 0.20);
   background: rgba(255, 255, 255, 0.56);
@@ -398,6 +402,78 @@
   display: flex;
   gap: 10px;
   justify-content: space-between;
+
+/* Responsive helpers and breakpoints */
+}
+
+/* Make images and media scale fluidly */
+.responsive-img,
+.galleryImg,
+.portraitImg,
+.flipSlide,
+.flipGallery img {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+/* Utility grid helpers (12-column ideas kept simple) */
+.grid {
+  display: grid;
+  gap: 16px;
+}
+
+/* Breakpoints: tablet / small laptop */
+@media (max-width: 900px) {
+  .heroGrid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    align-items: stretch;
+  }
+
+  .grid2 {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .portrait {
+    aspect-ratio: 3 / 4;
+  }
+
+  .title {
+    font-size: clamp(32px, 6.5vw, 48px);
+  }
+
+  .container { width: calc(100% - 32px); }
+}
+
+/* Mobile: stack content, reduce padding and font sizes */
+@media (max-width: 640px) {
+  .section { padding: 38px 0; }
+  .hero { padding: 40px 0 20px; }
+  .title { font-size: clamp(24px, 9vw, 36px); }
+  .subtitle, .lead { font-size: clamp(14px, 3.8vw, 16px); }
+  .topbarInner { padding: 10px 0; }
+  .brandMark { width: 28px; height: 28px; }
+  .pill { padding: 8px 10px; gap: 6px; }
+  .btn { padding: 10px 12px; border-radius: 12px; }
+
+  /* Make decorative fx layers less dense on small screens for performance */
+  .fx { display: none; }
+}
+
+/* Desktop wide tweaks */
+@media (min-width: 1200px) {
+  .container { width: min(1200px, 92%); }
+  .heroGrid { grid-template-columns: 1.3fr 0.7fr; }
+}
+
+/* Accessibility: ensure readable line lengths and spacing on narrow screens */
+@media (max-width: 480px) {
+  .lead, .subtitle { max-width: 48ch; }
+}
   align-items: center;
   margin-top: 12px;
 }
@@ -780,5 +856,50 @@
 @media (max-width: 720px) {
   .flipGallery { width: min(320px, 92vw) }
   .flipGallery .flipDots { bottom: 8px }
+}
+
+/* Header responsive behavior and mobile nav */
+.menuToggle {
+  display: none;
+  border: none;
+  background: transparent;
+  padding: 8px;
+  margin-left: 8px;
+  color: var(--ink);
+  cursor: pointer;
+  border-radius: 8px;
+}
+.menuToggle:focus { outline: none; box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
+
+@media (max-width: 900px) {
+  .nav { display: none; }
+  .menuToggle { display: inline-flex; align-items: center; justify-content: center; }
+
+  .topbarInner { align-items: center; gap: 8px; }
+  .brand { font-size: 16px; }
+
+  .nav.open {
+    display: flex;
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    top: calc(100% + 10px);
+    flex-direction: column;
+    gap: 8px;
+    background: rgba(255,255,255,0.96);
+    border-radius: 12px;
+    padding: 12px;
+    box-shadow: 0 18px 40px rgba(8,6,14,0.12);
+  }
+
+  .nav.open .pill { width: 100%; justify-content: flex-start; padding: 12px 14px; border-radius: 10px; }
+}
+
+@media (max-width: 1100px) and (min-width: 901px) {
+  .pill { padding: 10px 12px; }
+}
+
+@media (min-width: 900px) {
+  .topbarInner { padding: 10px 0; }
 }
 
