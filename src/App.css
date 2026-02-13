@@ -23,6 +23,60 @@
   opacity: 0.9;
 }
 
+/* Smooth scrolling for internal nav buttons */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Subtle repeating heart-pattern overlay (very low opacity) */
+.fx::after {
+  content: "";
+  position: absolute;
+  inset: -6%;
+  pointer-events: none;
+  z-index: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='%23ff6b9a' fill-opacity='0.10' d='M12 21s-7.2-4.65-9.6-9.15C.7 8.95 2.4 6 5.55 6c1.7 0 3.05.92 3.85 2.02C10.2 6.92 11.55 6 13.25 6c3.15 0 4.85 2.95 3.15 5.85C19.2 16.35 12 21 12 21Z'/></svg>");
+  background-repeat: repeat;
+  background-size: 36px 36px;
+  opacity: 0.06;
+  mix-blend-mode: normal;
+}
+
+/* A few very subtle, slow-floating hearts in the background */
+.bgHearts {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: visible;
+}
+.bgHearts .bgHeart {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  opacity: 0.08;
+  transform-origin: center;
+  will-change: transform, opacity;
+  filter: blur(0.4px);
+}
+.bgHearts .bgHeart svg { width: 100%; height: 100%; display: block; }
+
+@keyframes bgFloat {
+  0% { transform: translate3d(0, 0, 0) scale(1); opacity: 0.06 }
+  50% { transform: translate3d(8px, -40px, 0) scale(1.06); opacity: 0.10 }
+  100% { transform: translate3d(-8px, -80px, 0) scale(1); opacity: 0.04 }
+}
+
+.bgHearts .bgHeart--one { left: 8%; bottom: 10%; animation: bgFloat 18s ease-in-out infinite; }
+.bgHearts .bgHeart--two { left: 36%; bottom: 6%; animation: bgFloat 22s ease-in-out 2s infinite; transform: scale(0.9); }
+.bgHearts .bgHeart--three { left: 68%; bottom: 12%; animation: bgFloat 20s ease-in-out 1s infinite; transform: scale(1.1); }
+.bgHearts .bgHeart--four { left: 86%; bottom: 4%; animation: bgFloat 26s ease-in-out 4s infinite; transform: scale(0.85); }
+
+@media (max-width: 640px) {
+  .fx::after { background-size: 26px 26px; opacity: 0.045 }
+  .bgHearts .bgHeart { width: 22px; height: 22px; opacity: 0.06 }
+}
+
 .fxLayer {
   position: absolute;
   inset: 0;
@@ -33,9 +87,9 @@
 .container {
   position: relative;
   z-index: 1;
-  width: min(1080px, calc(100% - 40px));
+  width: min(1100px, calc(100% - 48px));
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 24px;
 }
 
 .topbar {
@@ -111,19 +165,20 @@
   gap: 8px;
   padding: 10px 14px;
   border-radius: 999px;
-  border: 1px solid rgba(169, 63, 104, 0.20);
-  background: rgba(255, 255, 255, 0.56);
-  box-shadow: 0 10px 22px rgba(113, 0, 51, 0.06);
-  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+  border: 1px solid rgba(169, 63, 104, 0.16);
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 8px 18px rgba(198, 15, 75, 0.05);
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease, background 180ms ease;
   cursor: pointer;
   user-select: none;
 }
 
 .pill:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 20px 42px rgba(255, 43, 106, 0.14);
-  border-color: rgba(198, 15, 75, 0.28);
-  filter: drop-shadow(0 6px 24px rgba(255, 43, 106, 0.08));
+  transform: translateY(-3px) scale(1.01);
+  box-shadow: 0 22px 44px rgba(255, 43, 106, 0.12);
+  border-color: rgba(198, 15, 75, 0.22);
+  background: linear-gradient(90deg, rgba(255,255,255,0.98), rgba(255,243,246,0.98));
+  filter: drop-shadow(0 8px 28px rgba(255, 43, 106, 0.08));
 }
 
 .btn:hover {
@@ -171,29 +226,70 @@
 }
 
 .main {
-  padding-bottom: 74px;
+  padding-bottom: 40px; /* reduced to bring footer closer */
 }
 
 .section {
-  padding: 64px 0;
+  padding: clamp(28px, 6.5vw, 64px) 0;
+  scroll-margin-top: 92px;
+  border-bottom: 0;
 }
 
 .hero {
-  padding: 64px 0 34px;
+  /* Reduced and responsive vertical padding to avoid excess vertical space */
+  padding: clamp(28px, 6.5vw, 64px) 0 clamp(18px, 3.5vw, 34px);
+  background-color: transparent;
+  /* Put your attached GIF at public/background.gif to use it here */
+  background-image: linear-gradient(180deg, rgba(255,255,255,0.28), rgba(255,255,255,0.32)), url('/background.gif');
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  /* keep text/content above decorative layers */
+  position: relative;
+  min-height: 0; /* ensure no forced min-height from inherited rules */
+  /* Prevent hero from growing taller than the viewport and hide any overflow */
+  max-height: 78vh;
+  overflow: hidden;
+}
+
+/* Fallback when GIFs are blocked or fail to load: remove animated image and show soft blur + color overlay */
+html.no-gif .hero {
+  /* hide GIF background and use a subtle pastel fill */
+  background-image: linear-gradient(180deg, rgba(255,255,255,0.28), rgba(255,255,255,0.32));
+  background-color: #fff6f9;
+}
+
+html.no-gif .hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  /* gentle pink overlay + blur to emulate soft motion without animation */
+  background: linear-gradient(180deg, rgba(255, 192, 203, 0.18), rgba(255, 77, 141, 0.06));
+  backdrop-filter: blur(6px) saturate(1.02);
+}
+
+/* Ensure text/content sits above the overlay */
+html.no-gif .hero > .container { position: relative; z-index: 2 }
+
+@media (max-width: 640px) {
+  html.no-gif .hero::before { backdrop-filter: blur(4px); background: linear-gradient(180deg, rgba(255,192,203,0.14), rgba(255,77,141,0.04)); }
 }
 
 .heroGrid {
   display: grid;
   grid-template-columns: 1.2fr 0.8fr;
-  gap: 26px;
-  align-items: center;
+  gap: clamp(12px, 3vw, 26px);
+  align-items: start; /* anchor items to top to avoid large bottom gaps */
 }
 
 .title {
-  font-size: clamp(40px, 5vw, 64px);
-  line-height: 1.02;
-  letter-spacing: -0.8px;
-  margin: 0;
+  font-size: clamp(32px, 4.8vw, 64px);
+  line-height: 1.04;
+  letter-spacing: -0.6px;
+  margin: 0 0 8px 0;
+  color: var(--ink);
 }
 
 .titleGlow {
@@ -205,9 +301,10 @@
 }
 
 .subtitle {
-  margin: 14px 0 0;
-  font-size: clamp(16px, 2vw, 20px);
+  margin: 10px 0 0;
+  font-size: clamp(15px, 2.2vw, 18px);
   color: var(--muted);
+  max-width: 56ch;
 }
 
 .ctaRow {
@@ -221,14 +318,14 @@
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  border-radius: 14px;
-  padding: 12px 14px;
-  border: 1px solid rgba(169, 63, 104, 0.22);
-  background: rgba(255, 255, 255, 0.62);
-  box-shadow: var(--shadow2);
+  border-radius: 999px;
+  padding: 10px 14px;
+  border: 1px solid rgba(169, 63, 104, 0.18);
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 10px 20px rgba(198,15,75,0.06);
   cursor: pointer;
   font-weight: 700;
-  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+  transition: transform 200ms ease, box-shadow 220ms ease, border-color 220ms ease, background 220ms ease;
 }
 
 .btnPrimary {
@@ -280,6 +377,9 @@
     linear-gradient(180deg, rgba(255, 255, 255, 0.46), rgba(255, 255, 255, 0.22));
   display: grid;
   place-items: center;
+  /* cap portrait size so hero doesn't grow excessively on larger viewports */
+  max-height: 420px;
+  width: 100%;
 }
 
 .portraitInner {
@@ -474,9 +574,7 @@
 @media (max-width: 480px) {
   .lead, .subtitle { max-width: 48ch; }
 }
-  align-items: center;
-  margin-top: 12px;
-}
+
 
 .dots {
   display: inline-flex;
@@ -643,8 +741,12 @@
   display: grid;
   place-items: center;
   text-align: center;
-  padding: 70px 0 90px;
+  padding: 28px 0 36px; /* tightened final section spacing */
 }
+/* Tighter final section child spacing to avoid extra gaps from inline styles */
+.finalWrap .bigHeart { margin-bottom: 6px; }
+.finalWrap .h2 { margin-top: 6px; }
+.finalWrap .lead { margin-top: 6px; max-width: 64ch; }
 
 .bigHeart {
   width: 160px;
@@ -901,5 +1003,103 @@
 
 @media (min-width: 900px) {
   .topbarInner { padding: 10px 0; }
+}
+
+/* Section improvements: gentle dividers, alternating soft backgrounds, centered layouts */
+.section {
+  padding: clamp(28px, 6.5vw, 64px) 0;
+  scroll-margin-top: 92px;
+  border-bottom: 0;
+}
+
+.section--alt {
+  background: linear-gradient(180deg, rgba(255,244,247,0.6), rgba(255,240,242,0.6));
+  border-top: 1px solid rgba(198,15,75,0.04);
+}
+
+.section--center .container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 18px;
+}
+
+.section--hero { padding: clamp(24px, 6.5vw, 48px) 0 clamp(12px, 3.2vw, 28px); }
+.section--final { padding: clamp(20px, 6vw, 48px) 0 clamp(18px, 4vw, 56px); }
+
+/* Headings and typography tweaks for consistency */
+.section .title,
+.section .h2 {
+  margin: 0 auto 8px;
+  max-width: 68ch;
+}
+
+.section .subtitle,
+.section .lead {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+/* Smooth fade for reveal (slightly stronger) */
+.reveal { transition: opacity 720ms ease, transform 720ms cubic-bezier(.2,.9,.3,1); }
+
+/* Layout tweaks for gallery and memories when centered */
+@media (max-width: 900px) {
+  .flipWrap { width: 100%; }
+  .memories { grid-template-columns: 1fr; }
+}
+
+@media (min-width: 900px) {
+  .section--center .container { align-items: center; }
+}
+
+/* Small screens: tighten spacing */
+@media (max-width: 640px) {
+  .section { padding: 38px 0; }
+  .section--final { padding: 48px 0 70px; }
+}
+
+/* Footer styles - clean, responsive, readable */
+.siteFooter {
+  border-top: 1px solid rgba(169,63,104,0.06);
+  background: linear-gradient(180deg, rgba(255,255,255,0.92), rgba(255,247,251,0.96));
+  color: var(--ink);
+  padding: 28px 0 40px;
+  margin-top: 36px;
+}
+.siteFooter .footerInner {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+  align-items: center;
+}
+.footerBrand { display: flex; align-items: center; gap: 12px; }
+.smallFooterMark { width: 38px; height: 38px; border-radius: 10px; }
+.footerNav { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+.footerNav .pill { padding: 8px 12px; border-radius: 999px; }
+.footerNoteWrap { text-align: center; }
+.footerNote { font-weight: 700; }
+
+/* Larger screens: three columns */
+@media (min-width: 780px) {
+  .siteFooter .footerInner { grid-template-columns: 1fr auto 1fr; align-items: center; }
+  .footerNav { justify-content: center; }
+
+  /* Mobile: stack footer nav vertically and make pills full-width */
+  @media (max-width: 780px) {
+    .siteFooter .footerInner { grid-template-columns: 1fr; }
+    .footerNav { flex-direction: column; gap: 10px; width: 100%; }
+    .footerNav .pill { width: 100%; justify-content: center; }
+    .footerBrand, .footerNoteWrap { justify-self: center; }
+  }
+  .footerNoteWrap { text-align: right; }
+}
+
+@media (max-width: 420px) {
+  .siteFooter { padding: 20px 0 28px; }
+  .footerNav .pill { padding: 8px 10px; font-size: 13px; }
+  .footerBrand { gap: 8px; }
 }
 

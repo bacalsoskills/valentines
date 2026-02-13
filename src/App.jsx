@@ -354,6 +354,36 @@ function App() {
   const audioRef = useRef(null)
   const [musicOn, setMusicOn] = useState(false)
 
+  // Detect whether the hero background GIF can be loaded; if not, add a 'no-gif' class
+  useEffect(() => {
+    let mounted = true
+    const img = new Image()
+    let timedOut = false
+    const timeout = setTimeout(() => {
+      if (!mounted) return
+      timedOut = true
+      document.documentElement.classList.add('no-gif')
+    }, 2200)
+
+    img.onload = () => {
+      if (!mounted) return
+      clearTimeout(timeout)
+      if (!timedOut) document.documentElement.classList.remove('no-gif')
+    }
+    img.onerror = () => {
+      if (!mounted) return
+      clearTimeout(timeout)
+      document.documentElement.classList.add('no-gif')
+    }
+
+    img.src = '/background.gif'
+
+    return () => {
+      mounted = false
+      clearTimeout(timeout)
+    }
+  }, [])
+
   useEffect(() => {
     if (!autoplay) return
     const t = window.setInterval(() => setIndex((v) => (v + 1) % slides.length), 3800)
@@ -395,6 +425,28 @@ function App() {
       <IntroModal visible={introVisible} onClose={() => setIntroVisible(false)} onYes={() => startMusic()} />
 
       <div className="fx" aria-hidden="true">
+        <div className="bgHearts" aria-hidden="true">
+          <span className="bgHeart bgHeart--one">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden>
+              <path d="M12 21s-7.2-4.65-9.6-9.15C.7 8.95 2.4 6 5.55 6c1.7 0 3.05.92 3.85 2.02C10.2 6.92 11.55 6 13.25 6c3.15 0 4.85 2.95 3.15 5.85C19.2 16.35 12 21 12 21Z" fill="#ff6b9a" />
+            </svg>
+          </span>
+          <span className="bgHeart bgHeart--two">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden>
+              <path d="M12 21s-7.2-4.65-9.6-9.15C.7 8.95 2.4 6 5.55 6c1.7 0 3.05.92 3.85 2.02C10.2 6.92 11.55 6 13.25 6c3.15 0 4.85 2.95 3.15 5.85C19.2 16.35 12 21 12 21Z" fill="#ffd1e0" />
+            </svg>
+          </span>
+          <span className="bgHeart bgHeart--three">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden>
+              <path d="M12 21s-7.2-4.65-9.6-9.15C.7 8.95 2.4 6 5.55 6c1.7 0 3.05.92 3.85 2.02C10.2 6.92 11.55 6 13.25 6c3.15 0 4.85 2.95 3.15 5.85C19.2 16.35 12 21 12 21Z" fill="#ffefde" />
+            </svg>
+          </span>
+          <span className="bgHeart bgHeart--four">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden>
+              <path d="M12 21s-7.2-4.65-9.6-9.15C.7 8.95 2.4 6 5.55 6c1.7 0 3.05.92 3.85 2.02C10.2 6.92 11.55 6 13.25 6c3.15 0 4.85 2.95 3.15 5.85C19.2 16.35 12 21 12 21Z" fill="#ffd1e0" />
+            </svg>
+          </span>
+        </div>
         <FloatingHearts y={y} />
         <Sparkles y={y} />
       </div>
@@ -452,7 +504,7 @@ function App() {
       </header>
 
       <main className="main">
-        <section id="hero" className="hero">
+        <section id="hero" className="hero section section--center section--hero">
           <div className="container">
             <div className="heroGrid">
               <Reveal>
@@ -493,19 +545,11 @@ function App() {
                   </div>
                 </div>
               </Reveal>
-
-              {/* Flowers overlay (lowered further) */}
-              <div className="flowers" aria-hidden="true" style={{ position: 'relative' }}>
-                <Flower variant={1} size={20} color="#FF6B6B" speed={0.8} style={{ left: '200%', bottom: '-30vmin', position: 'absolute' }} />
-                <Flower variant={1} size={10} color="#FFD66B" speed={0.9} style={{ left: '190%', bottom: '-4vmin', position: 'absolute', transform: 'scale(0.9) translateY(1vmin)' }} />
-                <Flower variant={1} size={14} color="#9AD3A0" speed={0.7} style={{ left: '180%', bottom: '-5vmin', position: 'absolute' }} />
-                <Flower variant={1} size={11} color="#FFB3C1" speed={1.0} style={{ left: '170%', bottom: '-4.5vmin', position: 'absolute' }} />
-              </div>
             </div>
           </div>
         </section>
 
-        <section id="gallery" className="section">
+        <section id="gallery" className="section section--alt">
           <div className="container">
             <Reveal>
               <h2 className="h2">Photo Gallery</h2>
@@ -520,7 +564,7 @@ function App() {
           </div>
         </section>
 
-        <section id="message" className="section">
+        <section id="message" className="section section--center">
           <div className="container">
             <Reveal>
               <h2 className="h2">A Message From My Heart</h2>
@@ -530,7 +574,7 @@ function App() {
           </div>
         </section>
 
-        <section id="memories" className="section">
+        <section id="memories" className="section section--alt">
           <div className="container">
             <Reveal>
               <div className="memoriesHeader">
@@ -572,7 +616,7 @@ function App() {
           </div>
         </section>
 
-        <section id="final" className="section">
+        <section id="final" className="section section--center section--final">
           <div className="container">
             <div className="finalWrap">
               <Reveal>
@@ -603,6 +647,32 @@ function App() {
           </div>
         </section>
       </main>
+      <footer className="siteFooter">
+        <div className="container footerInner">
+          <div className="footerBrand">
+            <div className="brandMark smallFooterMark">
+              <HeartIcon className="pillIcon" />
+            </div>
+            <div>
+              <div style={{ fontWeight: 800 }}>For Mom</div>
+              <div className="small" style={{ marginTop: 6 }}>A little site of love</div>
+            </div>
+          </div>
+
+          <nav className="footerNav" aria-label="Footer Navigation">
+            <button className="pill small" onClick={() => scrollToId('hero')}>Home</button>
+            <button className="pill small" onClick={() => scrollToId('gallery')}>Photos</button>
+            <button className="pill small" onClick={() => scrollToId('message')}>Message</button>
+            <button className="pill small" onClick={() => scrollToId('memories')}>Memories</button>
+            <button className="pill small" onClick={() => scrollToId('final')}>Love</button>
+          </nav>
+
+          <div className="footerNoteWrap">
+            <div className="footerNote">Made with ❤️ — Michael Ferdinand C. Bacalso</div>
+            
+          </div>
+        </div>
+      </footer>
     </div>
   )
 }
