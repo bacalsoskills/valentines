@@ -1,0 +1,144 @@
+.flower {
+  position: absolute;
+  bottom: 10vmin;
+  transform-origin: bottom center;
+  z-index: 10;
+  --fl-speed: 0.8s;
+  --fl-color: #ff6b6b;
+  --fl-width: 12vmin;
+  width: var(--fl-width);
+  pointer-events: none;
+}
+
+/* Flower movement */
+.flower--1 {
+  animation: moving-flower-1 4s ease-in-out infinite;
+}
+
+/* Stem */
+.flower_line {
+  width: clamp(3px, 0.4vmin, 6px);
+  height: 70vmin;
+  background: linear-gradient(180deg, rgba(120,184,124,0.95), rgba(84,133,94,0.95));
+  border-radius: 6px;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  transform-origin: bottom center;
+  animation-delay: 0.3s;
+}
+
+/* Leaves */
+.flower_line_leaf {
+  position: absolute;
+  width: 18vmin;
+  height: 8vmin;
+  background: linear-gradient(90deg, rgba(141,212,162,0.98), rgba(106,186,135,0.98));
+  border-radius: 50% 60% 60% 50% / 60% 60% 40% 40%;
+  opacity: 0.98;
+  transform-origin: right center;
+}
+
+.flower_line_leaf--1 {
+  left: 52%;
+  bottom: 40vmin;
+  transform: rotate(0deg) scale(0);
+  animation: blooming-leaf-right var(--fl-speed) 1.6s backwards;
+}
+
+.flower_line_leaf--2 {
+  left: calc(52% - 18vmin);
+  bottom: 30vmin;
+  transform-origin: left center;
+  transform: rotate(0deg) scale(0);
+  animation: blooming-leaf-left var(--fl-speed) 1.8s backwards;
+}
+
+/* Bloom (petals) */
+.bloom {
+  position: absolute;
+  width: calc(var(--fl-width) * 0.85);
+  height: calc(var(--fl-width) * 0.85);
+  left: 50%;
+  bottom: calc(70vmin - var(--fl-width) * 0.65);
+  transform: translateX(-50%);
+  transform-origin: center center;
+}
+
+.petal {
+  position: absolute;
+  width: 52%;
+  height: 52%;
+  background: var(--fl-color);
+  border-radius: 50% 50% 40% 40%;
+  transform-origin: 30% 70%;
+  opacity: 0;
+  animation: bloom-petal calc(var(--fl-speed) * 1.4) forwards;
+}
+
+.petal--1 { left: 50%; top: 10%; transform: translate(-50%, -10%) rotate(18deg); animation-delay: 0.15s }
+.petal--2 { left: 22%; top: 22%; transform: translate(-50%, -10%) rotate(-38deg); animation-delay: 0.25s }
+.petal--3 { left: 50%; top: 38%; transform: translate(-50%, -10%) rotate(160deg); animation-delay: 0.35s }
+.petal--4 { left: 78%; top: 22%; transform: translate(-50%, -10%) rotate(48deg); animation-delay: 0.45s }
+
+.center {
+  position: absolute;
+  width: 34%;
+  height: 34%;
+  left: 50%;
+  top: 38%;
+  transform: translate(-50%, -50%) scale(0);
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #fff2c9, #ffd66b 60%, #ffb36b 100%);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12) inset;
+  animation: blooming-center calc(var(--fl-speed) * 1.6) forwards;
+  animation-delay: 0.6s;
+}
+
+/* Animations */
+@keyframes moving-flower-1 {
+  0% {
+    transform: rotate(0deg) translateX(0);
+  }
+  50% {
+    transform: rotate(2deg) translateX(6px);
+  }
+  100% {
+    transform: rotate(0deg) translateX(0);
+  }
+}
+
+@keyframes blooming-leaf-right {
+  0% {
+    transform: rotate(0deg) scale(0);
+    opacity: 0;
+  }
+  100% {
+    transform: rotate(30deg) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes blooming-leaf-left {
+  0% { transform: rotate(0deg) scale(0); opacity: 0; }
+  100% { transform: rotate(-22deg) scale(1); opacity: 1; }
+}
+
+@keyframes bloom-petal {
+  0% { transform: scale(0) rotate(0deg); opacity: 0 }
+  60% { transform: scale(1.08) rotate(6deg); opacity: 1 }
+  100% { transform: scale(1) rotate(0deg); opacity: 1 }
+}
+
+@keyframes blooming-center {
+  0% { transform: scale(0); opacity: 0 }
+  80% { transform: scale(1.06); opacity: 1 }
+  100% { transform: scale(1); opacity: 1 }
+}
+
+/* Small responsive adjustments */
+@media (max-width: 640px) {
+  .flower { --fl-width: 18vmin }
+  .flower_line { height: 58vmin }
+}

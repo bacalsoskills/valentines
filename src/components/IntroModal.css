@@ -1,0 +1,200 @@
+.introModal {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+.introBackdrop {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 30% 20%, rgba(255, 43, 106, 0.08), transparent 20%),
+    radial-gradient(circle at 80% 60%, rgba(246, 195, 92, 0.06), transparent 24%),
+    linear-gradient(180deg, rgba(255,255,255,0.45), rgba(255,255,255,0.3));
+  backdrop-filter: blur(8px) saturate(1.05);
+  transition: opacity 420ms ease;
+  opacity: 1;
+}
+
+.introPanel {
+  position: relative;
+  z-index: 2;
+  width: min(820px, calc(100% - 44px));
+  max-width: 920px;
+  border-radius: 18px;
+  padding: 38px 28px;
+  text-align: center;
+  box-shadow: 0 30px 60px rgba(8, 6, 14, 0.32);
+  background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255, 247, 251, 0.94));
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+  transition: transform 420ms cubic-bezier(.2,.9,.3,1), opacity 420ms ease;
+}
+
+.introTitle {
+  margin: 0 0 10px 0;
+  font-size: clamp(26px, 4vw, 44px);
+  letter-spacing: -0.6px;
+  font-weight: 800;
+  color: #2a101f;
+}
+
+.introSub {
+  margin: 0 0 18px 0;
+  font-size: clamp(16px, 2.2vw, 20px);
+  color: rgba(42, 16, 32, 0.72);
+}
+
+.introButtons {
+  margin-top: 8px;
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  align-items: center;
+}
+
+.introBtn {
+  cursor: pointer;
+  user-select: none;
+  border-radius: 12px;
+  padding: 14px 22px;
+  border: 1px solid rgba(169,63,104,0.18);
+  background: rgba(255,255,255,0.72);
+  transition: transform 420ms cubic-bezier(.2,.9,.3,1), opacity 220ms ease, box-shadow 320ms ease;
+  font-weight: 800;
+  font-size: 18px;
+  pointer-events: auto;
+}
+
+.introBtn:focus {
+  outline: none;
+  box-shadow: 0 18px 48px rgba(255, 43, 106, 0.18);
+  transform: translateY(-2px) scale(1.02);
+}
+
+.introYes {
+  box-shadow: 0 18px 36px rgba(255, 43, 106, 0.16);
+  background: linear-gradient(135deg, rgba(255, 43, 106, 0.12), rgba(246, 195, 92, 0.10));
+}
+
+.introNo {
+  background: linear-gradient(135deg, rgba(255,255,255,0.6), rgba(255,255,255,0.7));
+}
+
+/* playful animation when No has been clicked multiple times */
+.introNo.shrug {
+  animation: shrug 520ms ease forwards;
+}
+
+@keyframes shrug {
+  0% { transform: rotate(0deg) translateX(0) }
+  40% { transform: rotate(-8deg) translateX(-6px) }
+  100% { transform: rotate(6deg) translateX(8px) }
+}
+
+.introHint {
+  margin-top: 14px;
+  color: rgba(42, 16, 32, 0.6);
+  font-size: 13px;
+}
+
+.introParticles {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* corner hearts */
+.cornerHearts {
+  position: absolute;
+  top: -18px;
+  width: 36%;
+  height: 60px;
+  pointer-events: none;
+  z-index: 3;
+}
+.cornerLeft { left: 6%; }
+.cornerRight { right: 6%; }
+
+.cornerHeart {
+  position: absolute;
+  bottom: 0;
+  width: 18px;
+  height: 18px;
+  opacity: 0.95;
+  transform-origin: center;
+  animation: cornerFloat 4.8s ease-in-out infinite;
+}
+.cornerHeart svg { width: 100%; height: 100%; display: block }
+
+@keyframes cornerFloat {
+  0% { transform: translateY(0) scale(0.9) rotate(0deg); opacity: 0.72 }
+  50% { transform: translateY(-18px) scale(1.06) rotate(6deg); opacity: 1 }
+  100% { transform: translateY(0) scale(0.9) rotate(0deg); opacity: 0.72 }
+}
+
+.introHeart {
+  position: absolute;
+  bottom: 18%;
+  opacity: 0.92;
+  transform-origin: center;
+  animation: floatHeart 6.4s ease-in-out infinite;
+  filter: drop-shadow(0 8px 18px rgba(198, 15, 75, 0.12));
+  transition: transform 420ms ease, opacity 420ms ease;
+}
+
+.tinyHeart {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* slightly different float for variety */
+@keyframes floatHeartAlt {
+  0% { transform: translateY(0) scale(0.9) rotate(0deg); opacity: 0.65 }
+  50% { transform: translateY(-28px) scale(1.06) rotate(8deg); opacity: 1 }
+  100% { transform: translateY(0) scale(0.9) rotate(0deg); opacity: 0.65 }
+}
+@keyframes floatHeart {
+  0% { transform: translateY(0) scale(0.92); opacity: 0.65 }
+  50% { transform: translateY(-20px) scale(1.03); opacity: 1 }
+  100% { transform: translateY(0) scale(0.92); opacity: 0.65 }
+}
+
+/* states */
+.introModal:not(.introVisible) .introBackdrop { opacity: 0; pointer-events: none }
+.introModal:not(.introVisible) .introPanel { opacity: 0; transform: translateY(10px) scale(0.96); pointer-events: none }
+
+.introModal.introClosing .introBackdrop { opacity: 0 }
+.introModal.introClosing .introPanel { opacity: 0; transform: translateY(-12px) scale(0.98) }
+
+/* Hide and pause particles / corner hearts while intro is closing or hidden */
+.introModal:not(.introVisible) .introParticles,
+.introModal:not(.introVisible) .cornerHearts,
+.introModal.introClosing .introParticles,
+.introModal.introClosing .cornerHearts {
+  opacity: 0;
+  transform: translateY(8px);
+  pointer-events: none;
+  transition: opacity 420ms ease, transform 420ms cubic-bezier(.2,.9,.3,1);
+}
+
+/* Pause the individual heart animations during close so they don't freeze awkwardly */
+.introModal:not(.introVisible) .introHeart,
+.introModal.introClosing .introHeart {
+  animation-play-state: paused !important;
+  opacity: 0!important;
+}
+
+/* Ensure hearts run when visible */
+.introHeart { animation-play-state: running }
+
+/* responsive */
+@media (max-width: 720px) {
+  .introPanel { padding: 28px 18px }
+  .introButtons { gap: 12px }
+  .introBtn { padding: 12px 16px; font-size: 16px }
+}
